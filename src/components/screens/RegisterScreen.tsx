@@ -69,7 +69,7 @@ export default function RegisterScreen() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-red-50">
       {/* Sol Panel - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gray-50">
         <div className="w-full max-w-lg">

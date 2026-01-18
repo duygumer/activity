@@ -1,9 +1,23 @@
 import { LoginData, RegisterData, AuthResponse } from '../types/auth.types';
+import { mockAuthService } from './mock-auth';
+
+// Geçici Mock Modu - Backend hazır olduğunda FALSE yapın
+const USE_MOCK_AUTH = true;
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 class AuthService {
   async login(data: LoginData): Promise<AuthResponse> {
+    // Mock mod açıksa mock servisi kullan
+    if (USE_MOCK_AUTH) {
+      const result = await mockAuthService.login(data);
+      if (result.token) {
+        localStorage.setItem('token', result.token);
+      }
+      return result;
+    }
+
+    // Gerçek backend çağrısı
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: {
@@ -28,6 +42,16 @@ class AuthService {
   }
 
   async register(data: RegisterData): Promise<AuthResponse> {
+    // Mock mod açıksa mock servisi kullan
+    if (USE_MOCK_AUTH) {
+      const result = await mockAuthService.register(data);
+      if (result.token) {
+        localStorage.setItem('token', result.token);
+      }
+      return result;
+    }
+
+    // Gerçek backend çağrısı
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: {
@@ -52,6 +76,9 @@ class AuthService {
   }
 
   async logout(): Promise<void> {
+    if (USE_MOCK_AUTH) {
+      await mockAuthService.logout();
+    }
     localStorage.removeItem('token');
   }
 
